@@ -7,3 +7,5 @@ database:
   ssl_mode: "disable"
   max_attempts: 5
   pg_url: "postgres://user:pass@localhost:5432/postgres"
+api:
+  port: ":9000"

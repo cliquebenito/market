@@ -15,11 +15,18 @@ type DataBaseconfig struct {
 	MaxAttempts int    `yaml:"max_attempts"`
 	PG_URL      string `yaml:"pg_url"`
 }
-type Config struct {
-	Database DataBaseconfig `yaml:"database"`
+
+type ServeConfig struct {
+	Port string `yaml:"port"`
 }
 
-func NewConfig() (*Config, error) {
+type Config struct {
+	Database DataBaseconfig `yaml:"database"`
+	Api      ServeConfig    `yaml:"api"`
+}
+
+// // отдаёт нам конфиг исходя из config.yaml
+func CheckConfig() (*Config, error) {
 	cfg := &Config{}
 
 	err := cleanenv.ReadConfig("../config/config.yaml", cfg)

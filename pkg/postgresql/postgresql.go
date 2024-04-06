@@ -10,15 +10,6 @@ import (
 	"time"
 )
 
-//type DsnConfig struct {
-//	Host        string
-//	Port        string
-//	User        string
-//	Password    string
-//	Database    string
-//	MaxAttempts int
-//}
-
 type Client interface {
 	Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
 	Query(context.Context, string, ...interface{}) (pgx.Rows, error)
@@ -27,20 +18,26 @@ type Client interface {
 	BeginTx(ctx context.Context, txOptions pgx.TxOptions) (pgx.Tx, error)
 }
 
-func NewClient(ctx context.Context, cfg config.DataBaseconfig) (pool *pgxpool.Pool, err error) {
+var DB *pgxpool.Pool
+
+func NewClient(ctx context.Context, cfg config.Config) (pool *pgxpool.Pool, err error) {
 
 	//var pool *pgxpool.Pool
 	//var err error
-	s := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Name)
-
-	for i := 0; i < cfg.MaxAttempts; i++ {
-		time.Sleep(5 * time.Second)
+	s := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		cfg.Database.Host,
+		cfg.Database.Port,
+		cfg.Database.User,
+		cfg.Database.Password,
+		cfg.Database.Name)
+	for i := 0; i < cfg.Database.MaxAttempts; i++ {
+		time.Sleep(1 * time.Second)
 		pool, err = pgxpool.New(ctx, s)
 		if err != nil {
 			fmt.Println("failed to connect to postgres")
 		}
 
 	}
-
-	return pool, err
+	DB = pool
+	return DB, err
 }

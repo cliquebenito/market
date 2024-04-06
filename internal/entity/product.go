@@ -1,4 +1,4 @@
-package internal
+package entity
 
 //хранение данных каталога продуктов (на этом этапе можно сделать хранение
 //в памяти сервиса или попытаться храниться в БД)
@@ -18,4 +18,9 @@ type Product struct {
 	ID     int
 	Name   string
 	Weight int
+}
+type User struct {
+	ID       int
+	Name     string
+	Password string
 }
